@@ -23,8 +23,6 @@ public class Author extends BaseEntity {
     @Column(name = "country_of_origin")
     private String country;
 
-//    @Column(name="books")
-//    @ElementCollection(fetch = FetchType.LAZY)
     @ManyToMany(mappedBy = "authors", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Set<Book> books;
 }
