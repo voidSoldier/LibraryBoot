@@ -10,19 +10,28 @@ VALUES ('USER', 1),
 INSERT INTO BOOKS (TITLE, FINISHED)
 VALUES ('Moby Dick', true),
        ('Best served cold', true),
-       ('Всем стоять на Занзибаре', false);
+       ('Всем стоять на Занзибаре', false),
+       ('Герои', false),
+       ('Благие знамения', true);
 
 INSERT INTO GENRES (BOOK_ID, GENRE)
 VALUES (1, 'CLASSICS'),
        (2, 'FANTASY'),
-       (3, 'SF');
+       (3, 'SF'),
+       (4, 'FANTASY'),
+       (5, 'FANTASY');
 
 INSERT INTO AUTHORS (COUNTRY_OF_ORIGIN, NAME)
 VALUES ('USA', 'Герман Мелвилл'),
        ('UK', 'Joe Abercrombie'),
-       ('USA', 'Джон Браннер');
+       ('USA', 'Джон Браннер'),
+       ('UK', 'Терри Пратчетт'),
+       ('UK', 'Нилл Гейман');
 
 INSERT INTO BOOK_AUTHORS (BOOK_ID, AUTHOR_ID)
-VALUES ('1', '1'),
-       ('2', '2'),
-       ('3', '3');
+VALUES (1, 1),
+       (2, 2),
+       (3, 3),
+       (4, 2),
+       (5, 4),
+       (5, 5);
