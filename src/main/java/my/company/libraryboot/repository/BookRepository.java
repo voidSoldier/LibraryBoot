@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    @RestResource(rel = "by-title", path = "by-title")
+    @RestResource(rel = "by-title", path = "by-title") // admin acccess only!
     Page<Book> findBookByTitle(String title, Pageable page);
 
 //    @RestResource(rel = "by-genres", path = "by-genres")
