@@ -5,7 +5,6 @@ import my.company.libraryboot.model.Book;
 import my.company.libraryboot.model.Genre;
 import my.company.libraryboot.repository.BookRepository;
 import my.company.libraryboot.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,72 +26,65 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 public class BookRestController {
 
     public static final String REST_URL = "/api/books";
-    @Autowired
+//    @Autowired
     BookRepository bookRepository;
-    @Autowired
+//    @Autowired
     BookService bookService;
 
-    @GetMapping(path = "/thymleaf")
-    public String getAllWithThymleaf(Model model) {
-      List<Book> books = bookRepository.findAll();
-      model.addAttribute("books", books);
-      return "books";
+    public BookRestController(BookRepository bookRepository,  BookService bookService) {
+        this.bookRepository = bookRepository;
+        this.bookService = bookService;
     }
-
-//    @GetMapping()
-//    public ResponseEntity<Page<Book>> getAll(@NotNull final Pageable pageable) {
-//        Page<Book> books = bookRepository.findAll(pageable);
-//        return ResponseEntity.ok(books);
-//    }
 
     @GetMapping()
-    public ResponseEntity<Page<Book>> getAll(@NotNull final Pageable pageable) {
-        Page<Book> books = bookRepository.findAll(pageable);
-        return ResponseEntity.ok(books);
-    }
-
-    @GetMapping(path = "/sort-by-title/thymleaf")
-    public String getAllSortByTitleWithThymleaf(Model model) {
-        List<Book> sorted = bookRepository.findAll();
-        sorted.sort(Comparator.comparing(Book::getTitle));
-        model.addAttribute("books", sorted);
-        return "books";
+    public Page<Book> getAll(@NotNull final Pageable pageable) {
+        return bookRepository.findAll(pageable);
     }
 
     // http://localhost:8080/api/books/sorted?pageNo=0&pageSize=10&sortBy=finished
     // TODO: add ascending or descending order
     @GetMapping(path = "/sorted")
-    public ResponseEntity<Page<Book>> getAllSorted(
+    public Page<Book> getAllSorted(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
             @RequestParam(defaultValue = "title") String sortBy)
     {
-        Page<Book> books = bookService.getAllSorted(pageNo, pageSize, sortBy);
-        return ResponseEntity.ok(books);
+        return bookService.getAllSorted(pageNo, pageSize, sortBy);
     }
 
     @GetMapping(path = "/filter-by-author/{authorName}")
-    public ResponseEntity<Page<Book>> getFilteredByAuthor(@PathVariable String authorName, @NotNull final Pageable pageable) {
-        Page<Book> result = bookService.getAllFilteredByAuthor(pageable, authorName);
-        return ResponseEntity.ok(result);
-    }
-
-    @GetMapping(path = "/filter-by-author/thymleaf")
-    public String getFilteredByAuthorWithThymleaf(@RequestParam String authorName, Model model) {
-        List<Book> filtered = bookService.getAllFilteredByAuthor(Pageable.unpaged(), authorName).getContent();
-        model.addAttribute("books", filtered);
-        return "books";
+    public Page<Book> getFilteredByAuthor(@PathVariable String authorName, @NotNull final Pageable pageable) {
+        return bookService.getAllFilteredByAuthor(pageable, authorName);
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Page<Book>> getBook(@PathVariable int id, @NotNull final Pageable pageable) {
+    public Page<Book> getBook(@PathVariable int id, @NotNull final Pageable pageable) {
         Page<Book> result = bookRepository.findBookById(id, pageable);
         if (!result.isEmpty())
-            return ResponseEntity.ok(result);
+            return result;
         else
             throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", id));
     }
 
+    @GetMapping(path = "/title/{title}")
+    public Page<Book> getBookByTitle(@PathVariable String title, @NotNull final Pageable pageable) {
+        return bookRepository.findBookByTitle(title, pageable);
+    }
+
+    @GetMapping(path = "/genre/{genre}")
+    public Page<Book> getBooksByGenre(@PathVariable Genre genre, @NotNull final Pageable pageable) {
+        return bookRepository.findBooksByGenresContaining(genre, pageable);
+    }
+
+    // TODO: doesn't work via sql request. Only with request result filtering
+    @GetMapping(path = "/author/{name}")
+    public Page<Book> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
+        return bookRepository.getBooksByAuthorName(name, pageable);
+    }
+
+    /**
+     *  ============================NON-IDEMPOTENT=====================================
+     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Book> addNewBook(@RequestBody Book newBook) {
         checkNew(newBook);
@@ -122,20 +114,30 @@ public class BookRestController {
         bookRepository.save(book);
     }
 
-    // TODO: works without ResponseEntity<Book> WHY??????
-    @GetMapping(path = "/title/{title}")
-    public Page<Book> getBookByTitle(@PathVariable String title, @NotNull final Pageable pageable) {
-        return bookRepository.findBookByTitle(title, pageable);
+
+
+    /**
+     *  ============================Thymeleaf=====================================
+     */
+    @GetMapping(path = "/thymeleaf")
+    public String getAllWithThymeleaf(Model model) {
+        List<Book> books = bookRepository.findAll();
+        model.addAttribute("books", books);
+        return "books";
     }
 
-    @GetMapping(path = "/genre/{genre}")
-    public Page<Book> getBooksByGenre(@PathVariable Genre genre, @NotNull final Pageable pageable) {
-        return bookRepository.findBooksByGenresContaining(genre, pageable);
+    @GetMapping(path = "/sort-by-title/thymeleaf")
+    public String getAllSortByTitleWithThymeleaf(Model model) {
+        List<Book> sorted = bookRepository.findAll();
+        sorted.sort(Comparator.comparing(Book::getTitle));
+        model.addAttribute("books", sorted);
+        return "books";
     }
 
-    // TODO: doesn't work via sql request. Only with request results filtering
-    @GetMapping(path = "/author/{name}")
-    Page<Book> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
-        return bookRepository.getBooksByAuthorName(name, pageable);
+    @GetMapping(path = "/filter-by-author/thymeleaf")
+    public String getFilteredByAuthorWithThymeleaf(@RequestParam String authorName, Model model) {
+        List<Book> filtered = bookService.getAllFilteredByAuthor(Pageable.unpaged(), authorName).getContent();
+        model.addAttribute("books", filtered);
+        return "books";
     }
 }
