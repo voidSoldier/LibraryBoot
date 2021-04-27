@@ -12,5 +12,6 @@ public enum Genre {
     BIOLOGY,
     PSYCHOLOGY,
     ASTRONOMY,
-    WAR
+    WAR,
+    DEFAULT
 }

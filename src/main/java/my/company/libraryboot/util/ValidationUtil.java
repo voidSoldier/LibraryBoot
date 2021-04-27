@@ -1,9 +1,10 @@
 package my.company.libraryboot.util;
 
-
+import lombok.experimental.UtilityClass;
 import my.company.libraryboot.error.IllegalRequestDataException;
 import my.company.libraryboot.model.BaseEntity;
 
+@UtilityClass
 public class ValidationUtil {
 
     public static void checkNew(BaseEntity entity) {

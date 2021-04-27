@@ -12,6 +12,8 @@ C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\config\AppCon
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\model\BaseEntity.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\model\Book.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\AuthUser.java
+C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\controllers\BookRestController.java
+C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\error\EntityNotFoundException.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\error\IllegalRequestDataException.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\config\WebSecurityConfig.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\LibraryBootApplication.java

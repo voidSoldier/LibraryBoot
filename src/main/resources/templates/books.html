@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Books List</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+<body>
+<h1>Books List</h1>
+<!--<a href="addPerson">Add Person</a>-->
+<br/><br/>
+<div>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Finished</th>
+        </tr>
+        <tr th:each ="book : ${books}">
+            <td th:utext="${book.title}">...</td>
+            <td th:utext="${book.authors}">...</td>
+            <td th:utext="${book.genres}">...</td>
+<!--            <td th:utext="${book.finished}">...</td>-->
+            <td th:if="${book.finished}" style="color: mediumspringgreen">Прочитана</td>
+            <td th:if="${!book.finished}" style="color: dodgerblue">Не прочитана</td>
+        </tr>
+    </table>
+    <br>
+    <form action="/api/books/sort-by-title" method="get">
+        <button type="submit">Sort by Title</button>
+    </form>
+    <br>
+    <form action="/api/books/filter-by-author" method="get">
+        <input type="text" name="authorName" placeholder="filter by author">
+        <button type="submit">Filter By Author</button>
+    </form>
+</div>
+</body>
+</html>

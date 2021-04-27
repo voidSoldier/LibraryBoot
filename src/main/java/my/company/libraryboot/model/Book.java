@@ -1,11 +1,7 @@
 package my.company.libraryboot.model;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.logging.log4j.util.Strings;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
@@ -13,7 +9,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "books")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class Book extends BaseEntity {
@@ -42,4 +39,8 @@ public class Book extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
 
+    @Override
+    public String toString() {
+        return String.format("Book[%s]", this.title);
+    }
 }
