@@ -1,6 +1,6 @@
 package my.company.libraryboot.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import my.company.libraryboot.model.enums.Gender;
 
@@ -15,6 +15,9 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "id")
 public class Author extends BaseEntity {
 
     @Column(name = "name", nullable = false)
@@ -26,7 +29,8 @@ public class Author extends BaseEntity {
     private String country;
 
 //    @JsonIgnore
-    @JsonBackReference
+//    @JsonBackReference
+    @JsonIgnoreProperties("authors") // to avoid Jackson JSON infinite recursion
     @ManyToMany(mappedBy = "authors", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Set<Book> books;
 
