@@ -1,7 +1,7 @@
 package my.company.libraryboot.repository;
 
 import my.company.libraryboot.model.Book;
-import my.company.libraryboot.model.Genre;
+import my.company.libraryboot.model.enums.Genre;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
@@ -18,15 +17,15 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
     /**
      *  @RestResource is ADMIN access only!
      */
-    @RestResource(rel = "by-title", path = "by-title")
+//    @RestResource(rel = "by-title", path = "by-title")
     Page<Book> findBookByTitle(String title, Pageable page);
 
-    @RestResource(rel = "by-author", path = "by-author")
+//    @RestResource(rel = "by-author", path = "by-author")
     @EntityGraph(attributePaths = {"authors"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE a.name LIKE :name")
     Page<Book> getBooksByAuthorName(@Param("name") String name, Pageable page);
 
-    @RestResource(rel = "by-genre", path = "by-genre")
+//    @RestResource(rel = "by-genre", path = "by-genre")
 //    @EntityGraph(attributePaths = {"genres"}, type = EntityGraph.EntityGraphType.LOAD)
 //    @Query("SELECT b FROM Book b JOIN FETCH b.genres g WHERE g")
     Page<Book> findBooksByGenresContaining(Genre genre, Pageable page);

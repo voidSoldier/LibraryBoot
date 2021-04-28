@@ -3,6 +3,7 @@ package my.company.libraryboot.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.*;
+import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.util.JsonDeserializers;
 import org.springframework.util.StringUtils;
 import javax.persistence.*;

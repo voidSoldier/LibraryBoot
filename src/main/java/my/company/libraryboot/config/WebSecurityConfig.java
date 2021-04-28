@@ -3,7 +3,7 @@ package my.company.libraryboot.config;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.AuthUser;
-import my.company.libraryboot.model.Role;
+import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").hasRole(Role.ADMIN.name())
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and().headers().frameOptions().disable() // to show h2 console correctly
                 .and().csrf().disable();
+
             // .antMatchers("/admin/**").hasRole("ADMIN")
             //                .antMatchers("/anonymous*").anonymous()
             //                .antMatchers("/login*").permitAll()

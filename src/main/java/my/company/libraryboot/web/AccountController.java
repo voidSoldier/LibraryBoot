@@ -3,7 +3,7 @@ package my.company.libraryboot.web;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.AuthUser;
-import my.company.libraryboot.model.Role;
+import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.repository.UserRepository;
 import my.company.libraryboot.util.ValidationUtil;

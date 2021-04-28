@@ -1,7 +1,8 @@
 package my.company.libraryboot.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
+import my.company.libraryboot.model.enums.Gender;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -24,9 +25,14 @@ public class Author extends BaseEntity {
     @Column(name = "country_of_origin")
     private String country;
 
-    @JsonIgnore
+//    @JsonIgnore
+    @JsonBackReference
     @ManyToMany(mappedBy = "authors", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
     private Set<Book> books;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
 
     @Override
     public String toString() {

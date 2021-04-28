@@ -2,7 +2,7 @@ package my.company.libraryboot.controllers;
 
 import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Book;
-import my.company.libraryboot.model.Genre;
+import my.company.libraryboot.model.enums.Genre;
 import my.company.libraryboot.repository.BookRepository;
 import my.company.libraryboot.service.BookService;
 import org.springframework.data.domain.Page;
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.Comparator;
@@ -84,6 +83,7 @@ public class BookRestController {
 
     /**
      *  ============================NON-IDEMPOTENT=====================================
+     *  TODO: test all
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Book> addNewBook(@RequestBody Book newBook) {
