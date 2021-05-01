@@ -51,11 +51,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .antMatchers("/api/account/register").anonymous()
                 .antMatchers("/api/account").hasRole(Role.USER.name())
-//                .antMatchers("/api/**").hasRole(Role.ADMIN.name())
-                .antMatchers("/api/**").hasRole(Role.USER.name())
+                .antMatchers("/api/**").hasRole(Role.ADMIN.name())
+//                .antMatchers("/api/**").hasRole(Role.USER.name())
                 .and().httpBasic()
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().headers().frameOptions().disable() // to show h2 console correctly
+                .and().headers().frameOptions().disable() // to display h2 console correctly http://localhost:8080/h2-console
                 .and().csrf().disable();
 
             // .antMatchers("/admin/**").hasRole("ADMIN")

@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping(value = BookTemplateController.REST_URL)
 public class BookTemplateController {
 
+    // TODO: doesn't work at all
     public static final String REST_URL = "/api/thymeleaf/books";
     @Autowired
     BookRepository bookRepository;

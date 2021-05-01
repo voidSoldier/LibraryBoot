@@ -1,5 +1,6 @@
 package my.company.libraryboot.service;
 
+import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.Book;
 import my.company.libraryboot.repository.BookRepository;
@@ -40,5 +41,24 @@ public class BookService {
             return bookRepository.getBooksByAuthorFullName(authorName, pageable);
         else
             return bookRepository.getBooksByAuthorName(authorName, pageable);
+    }
+
+    public void toggleBookFinished(int id) {
+        Book book = getBookById(id);
+        book.setFinished(!book.isFinished());
+        bookRepository.save(book);
+    }
+
+    public void toggleBookOwned(int id) {
+        Book book = getBookById(id);
+        book.setOwned(!book.isOwned());
+        bookRepository.save(book);
+    }
+
+    private Book getBookById(int id) throws EntityNotFoundException {
+        Page<Book> result = bookRepository.findBookById(id, Pageable.unpaged());
+        if (!result.isEmpty())
+            return result.getContent().get(0);
+        else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", id));
     }
 }

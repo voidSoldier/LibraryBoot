@@ -8,7 +8,6 @@ import org.apache.logging.log4j.util.Strings;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
-import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -37,10 +36,11 @@ public class Book extends BaseEntity {
     private BookType bookType;
 
     @Enumerated(EnumType.STRING)
-    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "book_id"))
+    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "book_id"),
+            uniqueConstraints ={@UniqueConstraint(columnNames = {"book_id", "genre"}, name = "book_genres_unique")})
     @Column(name = "genre")
     @ElementCollection(fetch = FetchType.EAGER)
-    private Set<Genre> genres = new HashSet<>();
+    private Set<Genre> genres;
 
 //    @JsonManagedReference
     @JsonIgnoreProperties("books") // to avoid Jackson JSON infinite recursion

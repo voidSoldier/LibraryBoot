@@ -80,7 +80,6 @@ public class BookRestController {
 
     /**
      *  ============================NON-IDEMPOTENT=====================================
-     *  TODO: test all
      */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Book> addNewBook(@RequestBody Book newBook) {
@@ -104,38 +103,18 @@ public class BookRestController {
         bookRepository.save(book);
     }
 
-    @PutMapping(path = "/finish", consumes = MediaType.APPLICATION_JSON_VALUE)
+    // TODO: get ? post ? put ? patch ?
+    @PutMapping(path = "/finish/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Book finishBook(@RequestBody Book book) {
-        book.setFinished(true);
-        bookRepository.save(book);
-        return book;
+    public void toggleBookFinished(@PathVariable int id) {
+       bookService.toggleBookFinished(id);
     }
 
+    // TODO: get ? post ? put ? patch ?
+    @PutMapping(path = "/owned/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void toggleBookOwned(@PathVariable int id) {
+        bookService.toggleBookOwned(id);
+    }
 
-
-    /**
-     *  ============================Thymeleaf=====================================
-     */
-//    @GetMapping(path = "/thymeleaf")
-//    public String getAllWithThymeleaf(Model model) {
-//        List<Book> books = bookRepository.findAll();
-//        model.addAttribute("books", books);
-//        return "books";
-//    }
-//
-//    @GetMapping(path = "/sort-by-title/thymeleaf")
-//    public String getAllSortByTitleWithThymeleaf(Model model) {
-//        List<Book> sorted = bookRepository.findAll();
-//        sorted.sort(Comparator.comparing(Book::getTitle));
-//        model.addAttribute("books", sorted);
-//        return "books";
-//    }
-//
-//    @GetMapping(path = "/filter-by-author/thymeleaf")
-//    public String getFilteredByAuthorWithThymeleaf(@RequestParam String authorName, Model model) {
-//        List<Book> filtered = bookService.getAllFilteredByAuthor(Pageable.unpaged(), authorName).getContent();
-//        model.addAttribute("books", filtered);
-//        return "books";
-//    }
 }

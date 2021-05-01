@@ -40,6 +40,7 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     @Transactional
     @Modifying
+    @Query("DELETE FROM Book b WHERE b.id = :id")
     int deleteBookById(int id);
 
     // http://localhost:8080/api/books/search/by-title?title=Moby%20Dick

@@ -3,6 +3,8 @@ package my.company.libraryboot.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import my.company.libraryboot.model.enums.Gender;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -30,18 +32,19 @@ public class Author extends BaseEntity {
     @Size(max = 255)
     private String lastName;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private Gender gender;
+
     @Column(name = "country_of_origin")
     private String country;
 
 //    @JsonIgnore
 //    @JsonBackReference
     @JsonIgnoreProperties("authors") // to avoid Jackson JSON infinite recursion
-    @ManyToMany(mappedBy = "authors", cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Book> books;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
-    private Gender gender;
 
     @Override
     public String toString() {
