@@ -26,12 +26,19 @@ public class BookService {
         List<Book> filtered = bookRepository.findAll().stream().filter(b -> {
             Set<Author> authors = b.getAuthors();
             for (Author a : authors)
-                if (a.getName().toLowerCase().contains(authorName.toLowerCase()))
+                if ((a.getFirstName() + " " + a.getLastName()).toLowerCase().contains(authorName.toLowerCase()))
                     return true;
             return false;
         }).collect(Collectors.toList());
 
         Page<Book> result = new PageImpl<>(filtered, pageable, filtered.size());
         return result;
+    }
+
+    public Page<Book> getBooksByAuthorName(String authorName, Pageable pageable) {
+        if (authorName.split(" ").length > 1)
+            return bookRepository.getBooksByAuthorFullName(authorName, pageable);
+        else
+            return bookRepository.getBooksByAuthorName(authorName, pageable);
     }
 }

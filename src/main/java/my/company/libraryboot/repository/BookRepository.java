@@ -22,8 +22,12 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
 //    @RestResource(rel = "by-author", path = "by-author")
     @EntityGraph(attributePaths = {"authors"}, type = EntityGraph.EntityGraphType.LOAD)
-    @Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE a.name LIKE :name")
+    @Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(a.firstName) LIKE LOWER(CONCAT(:name, '%')) OR LOWER(a.lastName) LIKE LOWER(CONCAT(:name, '%'))")
     Page<Book> getBooksByAuthorName(@Param("name") String name, Pageable page);
+
+    @EntityGraph(attributePaths = {"authors"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE LOWER(CONCAT(:name, '%'))")
+    Page<Book> getBooksByAuthorFullName(@Param("name") String name, Pageable page);
 
 //    @RestResource(rel = "by-genre", path = "by-genre")
 //    @EntityGraph(attributePaths = {"genres"}, type = EntityGraph.EntityGraphType.LOAD)

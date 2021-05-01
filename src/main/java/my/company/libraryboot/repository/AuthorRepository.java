@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface AuthorRepository extends JpaRepository<Author, Integer> {
 
 //    @RestResource(rel = "by-name", path = "by-name")
-    Page<Author> findAuthorByNameContaining(String name, Pageable page);
+    Page<Author> findAuthorByFirstNameContaining(String name, Pageable page);
 
 //    @RestResource(rel = "by-country", path = "by-country")
     Page<Author> findAuthorsByCountry(String country, Pageable page);
