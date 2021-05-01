@@ -75,10 +75,9 @@ public class BookRestController {
         return bookRepository.findBooksByGenresContaining(genre, pageable);
     }
 
-    // TODO: doesn't work via sql request. Only with request result filtering
     @GetMapping(path = "/author/{name}")
     public Page<Book> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
-        return bookRepository.getBooksByAuthorName(name, pageable);
+        return bookService.getBooksByAuthorName(name, pageable);
     }
 
     /**
