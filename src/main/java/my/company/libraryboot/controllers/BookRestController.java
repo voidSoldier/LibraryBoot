@@ -10,13 +10,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.validation.constraints.NotNull;
 import java.net.URI;
-import java.util.Comparator;
-import java.util.List;
 
 import static my.company.libraryboot.util.ValidationUtil.checkNew;
 
@@ -106,11 +104,12 @@ public class BookRestController {
         bookRepository.save(book);
     }
 
-    @PutMapping(path = "/{id}/finish", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/finish", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void finishBook(@RequestBody Book book) {
+    public Book finishBook(@RequestBody Book book) {
         book.setFinished(true);
         bookRepository.save(book);
+        return book;
     }
 
 
@@ -118,25 +117,25 @@ public class BookRestController {
     /**
      *  ============================Thymeleaf=====================================
      */
-    @GetMapping(path = "/thymeleaf")
-    public String getAllWithThymeleaf(Model model) {
-        List<Book> books = bookRepository.findAll();
-        model.addAttribute("books", books);
-        return "books";
-    }
-
-    @GetMapping(path = "/sort-by-title/thymeleaf")
-    public String getAllSortByTitleWithThymeleaf(Model model) {
-        List<Book> sorted = bookRepository.findAll();
-        sorted.sort(Comparator.comparing(Book::getTitle));
-        model.addAttribute("books", sorted);
-        return "books";
-    }
-
-    @GetMapping(path = "/filter-by-author/thymeleaf")
-    public String getFilteredByAuthorWithThymeleaf(@RequestParam String authorName, Model model) {
-        List<Book> filtered = bookService.getAllFilteredByAuthor(Pageable.unpaged(), authorName).getContent();
-        model.addAttribute("books", filtered);
-        return "books";
-    }
+//    @GetMapping(path = "/thymeleaf")
+//    public String getAllWithThymeleaf(Model model) {
+//        List<Book> books = bookRepository.findAll();
+//        model.addAttribute("books", books);
+//        return "books";
+//    }
+//
+//    @GetMapping(path = "/sort-by-title/thymeleaf")
+//    public String getAllSortByTitleWithThymeleaf(Model model) {
+//        List<Book> sorted = bookRepository.findAll();
+//        sorted.sort(Comparator.comparing(Book::getTitle));
+//        model.addAttribute("books", sorted);
+//        return "books";
+//    }
+//
+//    @GetMapping(path = "/filter-by-author/thymeleaf")
+//    public String getFilteredByAuthorWithThymeleaf(@RequestParam String authorName, Model model) {
+//        List<Book> filtered = bookService.getAllFilteredByAuthor(Pageable.unpaged(), authorName).getContent();
+//        model.addAttribute("books", filtered);
+//        return "books";
+//    }
 }

@@ -16,6 +16,8 @@
             <th>Author</th>
             <th>Genre</th>
             <th>Finished</th>
+            <th>Owned</th>
+            <th>Book Type</th>
         </tr>
         <tr th:each ="book : ${books}">
             <td th:utext="${book.title}">...</td>
@@ -24,6 +26,8 @@
 <!--            <td th:utext="${book.finished}">...</td>-->
             <td th:if="${book.finished}" style="color: mediumspringgreen">Прочитана</td>
             <td th:if="${!book.finished}" style="color: dodgerblue">Не прочитана</td>
+            <td th:utext="${book.owned}">...</td>
+            <td th:utext="${book.bookType}">...</td>
         </tr>
     </table>
     <br>

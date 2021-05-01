@@ -13,6 +13,7 @@ C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\error\AppExce
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\repository\AuthorRepository.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\controllers\AuthorController.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\controllers\UserController.java
+C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\controllers\BookTemplateController.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\model\enums\Role.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\repository\UserRepository.java
 C:\Users\NOIR-SAN\LibraryBoot\src\main\java\my\company\libraryboot\util\ValidationUtil.java
