@@ -1,6 +1,7 @@
 package my.company.libraryboot.repository;
 
 import my.company.libraryboot.model.Book;
+import my.company.libraryboot.model.enums.BookType;
 import my.company.libraryboot.model.enums.Genre;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +35,13 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 //    @Query("SELECT b FROM Book b JOIN FETCH b.genres g WHERE g")
     Page<Book> findBooksByGenresContaining(Genre genre, Pageable page);
 
+    Page<Book> findBooksByBookType(BookType bookType, Pageable pageable);
+
+    Page<Book> findBooksByOwned(boolean owned, Pageable pageable);
+
+    Page<Book> findBooksByFinished(boolean finished, Pageable pageable);
+
+    // TODO: is 'genres' necessary?
     @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b WHERE b.id = :id")
     Page<Book> findBookById(int id, Pageable page);

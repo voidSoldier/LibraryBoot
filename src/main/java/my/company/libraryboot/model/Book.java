@@ -19,6 +19,7 @@ import java.util.Set;
 //@JsonIdentityInfo(
 //        generator = ObjectIdGenerators.PropertyGenerator.class,
 //        property = "title")
+// TODO: add fields 'loved', 'cover', 'note'
 public class Book extends BaseEntity {
 
     @Column(name = "title", nullable = false)

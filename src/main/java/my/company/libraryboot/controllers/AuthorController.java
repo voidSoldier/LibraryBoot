@@ -2,7 +2,9 @@ package my.company.libraryboot.controllers;
 
 import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Author;
+import my.company.libraryboot.model.enums.Gender;
 import my.company.libraryboot.repository.AuthorRepository;
+import my.company.libraryboot.service.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +24,32 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 public class AuthorController {
 
         public static final String REST_URL = "/api/authors";
+        // TODO: why 'field injection' is not recommended?
         @Autowired
         AuthorRepository authorRepository;
+        @Autowired
+        AuthorService authorService;
 
         @GetMapping()
         public ResponseEntity<Page<Author>> getAll(@NotNull final Pageable pageable) {
                 Page<Author> result = authorRepository.findAll(pageable);
                 return ResponseEntity.ok(result);
+        }
+
+        // http://localhost:8080/api/auhtors/sorted?pageNo=0&pageSize=10&sortBy=coutry
+        // TODO: add ascending or descending order
+        @GetMapping(path = "/sorted")
+        public Page<Author> getAllSortedByParam(
+                @RequestParam(defaultValue = "0") Integer pageNo,
+                @RequestParam(defaultValue = "20") Integer pageSize,
+                @RequestParam(defaultValue = "title") String sortBy)
+        {
+                return authorService.getAllSorted(pageNo, pageSize, sortBy);
+        }
+
+        @GetMapping(path = "/by-name/{name}")
+        public Page<Author> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
+                return authorService.getBooksByAuthorName(name, pageable);
         }
 
         @GetMapping(path = "/{id}")
@@ -42,7 +63,12 @@ public class AuthorController {
 
         @GetMapping(path = "/by-country/{country}")
         public Page<Author> getByCountry(@PathVariable String country, @NotNull final Pageable pageable) {
-                return authorRepository.findAuthorsByCountry(country, pageable);
+                return authorRepository.findAuthorsByCountry(country.toUpperCase(), pageable);
+        }
+
+        @GetMapping(path = "/by-gender/{gender}")
+        public Page<Author> getByGender(@PathVariable Gender gender, @NotNull final Pageable pageable) {
+                return authorRepository.findAuthorsByGender(gender, pageable);
         }
 
         /**
