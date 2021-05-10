@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 @RequestMapping(value = UserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
 
-    public static final String REST_URL = "/users";
+    public static final String REST_URL = "/api/users";
     @Autowired
     UserRepository userRepository;
 
