@@ -41,6 +41,8 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Page<Book> findBooksByFinished(boolean finished, Pageable pageable);
 
+    Page<Book> findBooksByLovedTrue(Pageable pageable);
+
     // TODO: is 'genres' necessary?
     @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b WHERE b.id = :id")

@@ -28,9 +28,11 @@ create table BOOKS
 (
     ID        INTEGER AUTO_INCREMENT PRIMARY KEY,
     TITLE     VARCHAR not null,
-    FINISHED  BOOLEAN not null,
+    FINISHED  BOOLEAN default false,
     OWNED     BOOLEAN not null,
-    BOOK_TYPE VARCHAR not null
+    BOOK_TYPE VARCHAR not null,
+    LOVED     BOOLEAN default false,
+    NOTE      VARCHAR
 );
 
 create table GENRES

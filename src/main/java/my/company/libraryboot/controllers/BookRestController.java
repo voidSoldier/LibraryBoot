@@ -96,6 +96,11 @@ public class BookRestController {
         return bookRepository.findBooksByFinished(finished, pageable);
     }
 
+    @GetMapping(path = "/loved")
+    public Page<Book> getLoved(@NotNull final Pageable pageable) {
+        return bookRepository.findBooksByLovedTrue(pageable);
+    }
+
     /**
      *  ============================NON-IDEMPOTENT=====================================
      */

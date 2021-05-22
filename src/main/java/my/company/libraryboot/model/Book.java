@@ -32,6 +32,12 @@ public class Book extends BaseEntity {
     @Column(name = "owned")
     private boolean owned;
 
+    @Column(name = "loved")
+    private boolean loved;
+
+    @Column(name = "note")
+    private String note;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "book_type")
     private BookType bookType;
