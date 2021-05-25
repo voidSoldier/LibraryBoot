@@ -1,10 +1,13 @@
 package my.company.libraryboot.controllers;
 
+import my.company.libraryboot.error.BookCoverImageUploadingException;
 import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Book;
+import my.company.libraryboot.model.ImageBlob;
 import my.company.libraryboot.model.enums.BookType;
 import my.company.libraryboot.model.enums.Genre;
 import my.company.libraryboot.repository.BookRepository;
+import my.company.libraryboot.repository.ImageBlobRepository;
 import my.company.libraryboot.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,9 +15,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.FileImageInputStream;
 import javax.validation.constraints.NotNull;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 
 import static my.company.libraryboot.util.ValidationUtil.checkNew;
@@ -28,26 +38,29 @@ public class BookRestController {
     BookRepository bookRepository;
 //    @Autowired
     BookService bookService;
+    ImageBlobRepository imageRepository;
 
-    public BookRestController(BookRepository bookRepository,  BookService bookService) {
+    public BookRestController(BookRepository bookRepository, BookService bookService,  ImageBlobRepository imageRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
+        this.imageRepository = imageRepository;
     }
 
+//    @Transactional
     @GetMapping()
     public Page<Book> getAll(@NotNull final Pageable pageable) {
         return bookRepository.findAll(pageable);
     }
 
     // http://localhost:8080/api/books/sorted?pageNo=0&pageSize=10&sortBy=finished
-    // TODO: add ascending or descending order
     @GetMapping(path = "/sorted")
     public Page<Book> getAllSortedByParam(
             @RequestParam(defaultValue = "0") Integer pageNo,
             @RequestParam(defaultValue = "20") Integer pageSize,
-            @RequestParam(defaultValue = "title") String sortBy)
+            @RequestParam(defaultValue = "title") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction)
     {
-        return bookService.getAllSorted(pageNo, pageSize, sortBy);
+        return bookService.getAllSorted(pageNo, pageSize, sortBy, direction);
     }
 
 //    @GetMapping(path = "/filter-by-author/{authorName}")
@@ -99,6 +112,56 @@ public class BookRestController {
     @GetMapping(path = "/loved")
     public Page<Book> getLoved(@NotNull final Pageable pageable) {
         return bookRepository.findBooksByLovedTrue(pageable);
+    }
+
+    @PostMapping(path = "/upload-image/{bookId}")
+    public void uploadCoverImage(@RequestParam("file") MultipartFile cover, @PathVariable int bookId) throws BookCoverImageUploadingException {
+        Book book = bookRepository.findBookById(bookId, Pageable.unpaged()).getContent().get(0);
+
+        if (book != null) {
+            try {
+                ImageBlob bookCover = new ImageBlob(book, cover.getBytes());
+                imageRepository.save(bookCover);
+                book.setCoverImage(bookCover);
+                bookRepository.save(book);
+            } catch (IOException e) {
+                throw new BookCoverImageUploadingException(
+                        String.format("Error uploading cover image for Book with id %d", bookId));
+            }
+        } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
+    }
+
+    @GetMapping(path = "/upload-image-test/{bookId}")
+    public void uploadCoverImageTest(@PathVariable int bookId) throws BookCoverImageUploadingException {
+        Book book = bookRepository.findBookById(bookId, Pageable.unpaged()).getContent().get(0);
+
+        if (book != null) {
+            try {
+                BufferedImage bufferedImage =  ImageIO.read(new FileImageInputStream(new File("C:\\Users\\NOIR-SAN\\Desktop\\ShP\\Ec_djEpXsAUvpce.jpg")));
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
+                ImageIO.write(bufferedImage, "jpg", output);
+                byte [] cover = output.toByteArray();
+
+                ImageBlob bookCover = new ImageBlob(book, cover);
+                imageRepository.save(bookCover);
+
+                book.setCoverImage(bookCover);
+                bookRepository.save(book);
+
+            } catch (IOException e) {
+                throw new BookCoverImageUploadingException(
+                        String.format("Error uploading cover image for Book with id %d", bookId));
+            }
+        } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
+    }
+
+    @GetMapping(path = "/get-book-cover/{bookId}", produces = MediaType.IMAGE_JPEG_VALUE)
+    public @ResponseBody byte[] getBookCoverImage(@PathVariable int bookId) {
+        ImageBlob cover = imageRepository.findImageBlobByBook_Id(bookId);
+
+        if (cover != null)
+            return cover.getImage();
+        else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist OR it has no cover image!", bookId));
     }
 
     /**

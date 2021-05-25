@@ -4,6 +4,9 @@ drop table if exists GENRES;
 drop table if exists BOOK_AUTHORS;
 drop table if exists BOOKS;
 drop table if exists AUTHORS;
+drop table if exists BOOK_COVERS;
+drop table if exists COVERS;
+
 
 
 create table USERS
@@ -26,13 +29,13 @@ create table USER_ROLE
 
 create table BOOKS
 (
-    ID        INTEGER AUTO_INCREMENT PRIMARY KEY,
-    TITLE     VARCHAR not null,
-    FINISHED  BOOLEAN default false,
-    OWNED     BOOLEAN not null,
-    BOOK_TYPE VARCHAR not null,
-    LOVED     BOOLEAN default false,
-    NOTE      VARCHAR
+    ID          INTEGER AUTO_INCREMENT PRIMARY KEY,
+    TITLE       VARCHAR not null,
+    FINISHED    BOOLEAN default false,
+    OWNED       BOOLEAN not null,
+    BOOK_TYPE   VARCHAR not null,
+    LOVED       BOOLEAN default false,
+    NOTE        VARCHAR
 );
 
 create table GENRES
@@ -59,4 +62,19 @@ create table BOOK_AUTHORS
     CONSTRAINT book_author_idx UNIQUE (book_id, author_id),
     FOREIGN KEY (book_id) REFERENCES books (id) ON DELETE CASCADE,
     FOREIGN KEY (author_id) REFERENCES authors (id) ON DELETE CASCADE
+);
+
+create table COVERS
+(
+    ID      INTEGER AUTO_INCREMENT PRIMARY KEY,
+    IMAGE   BYTEA
+);
+
+create table BOOK_COVERS
+(
+    BOOK_ID     INTEGER not null,
+    IMAGE_ID    INTEGER not null,
+    CONSTRAINT book_cover_idx UNIQUE (book_id, image_id),
+    FOREIGN KEY (book_id) REFERENCES books (id) ON DELETE CASCADE,
+    FOREIGN KEY (image_id) REFERENCES covers (id) ON DELETE CASCADE
 );

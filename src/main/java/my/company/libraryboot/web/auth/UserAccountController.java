@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.Set;
 
 import static my.company.libraryboot.config.WebSecurityConfig.PASSWORD_ENCODER;
 
@@ -69,13 +69,13 @@ public class UserAccountController {
     private void prepareAndSave(User user) {
         String password = user.getPassword();
         user.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
-
         user.setEmail(user.getEmail().toLowerCase());
+        user.setRoles(new HashSet<>(Collections.singletonList(Role.USER))); // immutable
 
-        Set<Role> roles = new HashSet<>();
-        roles.add(Role.USER);
-        user.setRoles(roles);
-
+        /*
+        user.setRoles(new HashSet<>(Arrays.asList(Role.USER)));
+        user.setRoles(new HashSet<>(){{add(Role.USER);}}); // creates anonymous classes each time it's called
+        */
         userRepository.save(user);
     }
 }
