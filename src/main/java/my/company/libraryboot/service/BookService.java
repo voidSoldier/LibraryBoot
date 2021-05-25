@@ -18,8 +18,11 @@ public class BookService {
     @Autowired
     BookRepository bookRepository;
 
-    public Page<Book> getAllSorted(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+    private static final String SORT_ASC = "asc";
+
+    public Page<Book> getAllSorted(Integer pageNo, Integer pageSize, String sortBy, String direction) {
+        Sort.Direction dir = SORT_ASC.equals(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(dir, sortBy));
         return bookRepository.findAll(pageable);
     }
 

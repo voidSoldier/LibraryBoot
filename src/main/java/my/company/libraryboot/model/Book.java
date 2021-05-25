@@ -19,7 +19,6 @@ import java.util.Set;
 //@JsonIdentityInfo(
 //        generator = ObjectIdGenerators.PropertyGenerator.class,
 //        property = "title")
-// TODO: add fields 'loved', 'cover', 'note'
 public class Book extends BaseEntity {
 
     @Column(name = "title", nullable = false)
@@ -31,6 +30,12 @@ public class Book extends BaseEntity {
 
     @Column(name = "owned")
     private boolean owned;
+
+    @Column(name = "loved")
+    private boolean loved;
+
+    @Column(name = "note")
+    private String note;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "book_type")
@@ -51,6 +56,16 @@ public class Book extends BaseEntity {
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id"))
     private Set<Author> authors;
+
+    @JsonIgnoreProperties({"book", "image"}) // doesn't affect performance: fields are still loaded from DB, just not sent by controller
+    @OneToOne(cascade = CascadeType.PERSIST) // FetchType.EAGER set by default; FetchType.LAZY is unlikely possible: https://stackoverflow.com/a/1445694
+    @JoinTable(name = "book_covers",
+            joinColumns = @JoinColumn(name="book_id"),
+            inverseJoinColumns = @JoinColumn(name="image_id"))
+    private ImageBlob coverImage;
+
+
+
 
     @Override
     public String toString() {

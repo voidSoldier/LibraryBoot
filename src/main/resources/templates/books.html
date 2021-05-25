@@ -28,6 +28,8 @@
             <td th:if="${!book.finished}" style="color: dodgerblue">Не прочитана</td>
             <td th:utext="${book.owned}">...</td>
             <td th:utext="${book.bookType}">...</td>
+            <td th:utext="${book.note}">...</td>
+            <td th:if="${book.loved}" style="color: mediumspringgreen">&#128149;</td>
         </tr>
     </table>
     <br>
