@@ -1,5 +1,6 @@
 package my.company.libraryboot.web.auth;
 
+import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
@@ -20,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        log.debug("Authenticating '{}'", email);
+        log.debug("authenticating '{}'", username);
         Optional<User> optionalUser = userRepository.findByEmailIgnoreCase(username);
         return new AuthUser(optionalUser.orElseThrow(
                 () -> new UsernameNotFoundException("User '" + username + "' was not found")));
