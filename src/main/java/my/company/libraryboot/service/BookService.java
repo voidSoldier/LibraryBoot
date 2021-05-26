@@ -4,7 +4,6 @@ import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.Book;
 import my.company.libraryboot.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,11 @@ import java.util.stream.Collectors;
 @Service
 public class BookService {
 
-    @Autowired
     BookRepository bookRepository;
+
+    public BookService(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
 
     private static final String SORT_ASC = "asc";
 

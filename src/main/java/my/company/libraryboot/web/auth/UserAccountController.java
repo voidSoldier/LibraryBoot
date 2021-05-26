@@ -1,9 +1,9 @@
 package my.company.libraryboot.web.auth;
 
+import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -18,19 +18,23 @@ import java.util.HashSet;
 import static my.company.libraryboot.config.WebSecurityConfig.PASSWORD_ENCODER;
 
 @Controller
+//@AllArgsConstructor
+@Slf4j
 public class UserAccountController {
 
-    @Autowired
     UserRepository userRepository;
-    @Autowired
-    private SecurityService securityService;
-    @Autowired
-    private UserValidator userValidator;
+    SecurityService securityService;
+    UserValidator userValidator;
+
+    public UserAccountController(UserRepository userRepository, SecurityService securityService, UserValidator userValidator) {
+        this.userRepository = userRepository;
+        this.securityService = securityService;
+        this.userValidator = userValidator;
+    }
 
     @GetMapping("/registration")
     public String registration(Model model) {
         model.addAttribute("userForm", new User());
-
         return "registration";
     }
 
@@ -38,12 +42,10 @@ public class UserAccountController {
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
         userValidator.validate(userForm, bindingResult);
 
-        if (bindingResult.hasErrors()) {
+        if (bindingResult.hasErrors())
             return "registration";
-        }
 
         prepareAndSave(userForm);
-
 //        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
         securityService.autoLogin(userForm.getEmail(), userForm.getPassword());
 
@@ -70,12 +72,7 @@ public class UserAccountController {
         String password = user.getPassword();
         user.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
         user.setEmail(user.getEmail().toLowerCase());
-        user.setRoles(new HashSet<>(Collections.singletonList(Role.USER))); // immutable
-
-        /*
-        user.setRoles(new HashSet<>(Arrays.asList(Role.USER)));
-        user.setRoles(new HashSet<>(){{add(Role.USER);}}); // creates anonymous classes each time it's called
-        */
+        user.setRoles(new HashSet<>(Collections.singleton(Role.USER))); // Collections.singleton returns immutable Set, but new HashSet<>(Collections.singleton) is mutable
         userRepository.save(user);
     }
 }

@@ -1,5 +1,6 @@
 package my.company.libraryboot.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.enums.Gender;
@@ -21,6 +22,8 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AuthorController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+//@AllArgsConstructor
+@Slf4j
 public class AuthorController {
 
         public static final String REST_URL = "/api/authors";

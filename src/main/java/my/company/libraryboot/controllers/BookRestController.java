@@ -1,5 +1,6 @@
 package my.company.libraryboot.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.error.BookCoverImageUploadingException;
 import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.Book;
@@ -31,12 +32,12 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = BookRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+//@AllArgsConstructor
+@Slf4j
 public class BookRestController {
 
     public static final String REST_URL = "/api/books";
-//    @Autowired
     BookRepository bookRepository;
-//    @Autowired
     BookService bookService;
     ImageBlobRepository imageRepository;
 
