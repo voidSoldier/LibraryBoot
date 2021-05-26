@@ -1,6 +1,6 @@
 package my.company.libraryboot.service;
 
-import my.company.libraryboot.error.EntityNotFoundException;
+import my.company.libraryboot.exception.AppException.*;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.repository.UserRepository;
@@ -32,7 +32,8 @@ public class UserService {
         else throw new EntityNotFoundException(String.format("User with id %d doesn't exist!", id));
     }
 
-    public User addRole(User user, Role newRole) {
+    public User addRole(User user, String roleName) {
+        Role newRole = checkRole(roleName);
         Set<Role> roles = user.getRoles();
         roles.add(newRole);
         user.setRoles(roles);
@@ -57,5 +58,13 @@ public class UserService {
 
     public void updateUser(User user) {
         userRepository.save(user);
+    }
+
+    private Role checkRole(String role) throws RoleNotFoundException {
+        try {
+            return Role.valueOf(role);
+        } catch (IllegalArgumentException e) {
+            throw new RoleNotFoundException(String. format("Role with name [%s] not found!", role));
+        }
     }
 }

@@ -41,7 +41,7 @@ public class UserController {
 
     @Secured("ROLE_ADMIN")
     @PutMapping(path = "/add-role/{newRole}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> addRole(@RequestBody User user, @PathVariable Role newRole) {
+    public ResponseEntity<User> addRole(@RequestBody User user, @PathVariable String newRole) {
         log.info("adding role {} to user {}", newRole, user);
         User result = userService.addRole(user, newRole);
         return ResponseEntity.ok(result);
@@ -49,7 +49,7 @@ public class UserController {
 
 //    @Secured("ROLE_ADMIN")
 //    @GetMapping(path = "/add-role/{id}/{newRole}")
-//    public ResponseEntity<User> addRoleTest(@PathVariable int id, @PathVariable Role newRole) {
+//    public ResponseEntity<User> addRoleTest(@PathVariable int id, @PathVariable String newRole) {
 //        User user = userService.getUserById(id, Pageable.unpaged()).getContent().get(0);
 //        log.info("adding role {} to user {}", newRole, id);
 //        User result = userService.addRole(user, newRole);

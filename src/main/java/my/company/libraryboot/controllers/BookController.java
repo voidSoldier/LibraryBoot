@@ -1,8 +1,9 @@
 package my.company.libraryboot.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import my.company.libraryboot.error.BookCoverImageUploadingException;
-import my.company.libraryboot.error.EntityNotFoundException;
+import my.company.libraryboot.exception.AppException;
+import my.company.libraryboot.exception.AppException.BookCoverImageUploadingException;
+import my.company.libraryboot.exception.AppException.EntityNotFoundException;
 import my.company.libraryboot.model.Book;
 import my.company.libraryboot.model.ImageBlob;
 import my.company.libraryboot.model.enums.BookType;
@@ -126,7 +127,7 @@ public class BookController {
                 throw new BookCoverImageUploadingException(
                         String.format("Error uploading cover image for Book with id %d", bookId));
             }
-        } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
+        } else throw new AppException.EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
     }
 
 //    @GetMapping(path = "/upload-image-test/{bookId}")

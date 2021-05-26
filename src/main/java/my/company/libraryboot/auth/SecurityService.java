@@ -1,4 +1,4 @@
-package my.company.libraryboot.web.auth;
+package my.company.libraryboot.auth;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,4 +1,4 @@
-package my.company.libraryboot.web.auth;
+package my.company.libraryboot.auth;
 
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.repository.UserRepository;

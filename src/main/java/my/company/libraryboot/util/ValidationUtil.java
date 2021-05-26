@@ -1,7 +1,7 @@
 package my.company.libraryboot.util;
 
 import lombok.experimental.UtilityClass;
-import my.company.libraryboot.error.IllegalRequestDataException;
+import my.company.libraryboot.exception.AppException;
 import my.company.libraryboot.model.BaseEntity;
 
 @UtilityClass
@@ -9,7 +9,7 @@ public class ValidationUtil {
 
     public static void checkNew(BaseEntity entity) {
         if (!entity.isNew()) {
-            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must be new (id=null)");
+            throw new AppException.IllegalRequestDataException(entity.getClass().getSimpleName() + " must be new (id=null)");
         }
     }
 
@@ -18,7 +18,7 @@ public class ValidationUtil {
         if (entity.isNew()) {
             entity.setId(id);
         } else if (entity.id() != id) {
-            throw new IllegalRequestDataException(entity.getClass().getSimpleName() + " must have id=" + id);
+            throw new AppException.IllegalRequestDataException(entity.getClass().getSimpleName() + " must have id=" + id);
         }
     }
 }

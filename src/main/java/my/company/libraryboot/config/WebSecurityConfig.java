@@ -3,7 +3,7 @@ package my.company.libraryboot.config;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.repository.UserRepository;
-import my.company.libraryboot.web.auth.UserDetailsServiceImpl;
+import my.company.libraryboot.auth.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
