@@ -1,4 +1,4 @@
-package my.company.libraryboot.web.auth;
+package my.company.libraryboot.auth;
 
 import lombok.Getter;
 import lombok.ToString;

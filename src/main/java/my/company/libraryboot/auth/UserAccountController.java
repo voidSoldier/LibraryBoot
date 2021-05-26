@@ -1,4 +1,4 @@
-package my.company.libraryboot.web.auth;
+package my.company.libraryboot.auth;
 
 import lombok.extern.slf4j.Slf4j;
 import my.company.libraryboot.model.User;

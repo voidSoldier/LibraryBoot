@@ -1,6 +1,6 @@
 package my.company.libraryboot.service;
 
-import my.company.libraryboot.error.EntityNotFoundException;
+import my.company.libraryboot.exception.AppException.*;
 import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.Book;
 import my.company.libraryboot.repository.BookRepository;
