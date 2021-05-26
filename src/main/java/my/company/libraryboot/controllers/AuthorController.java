@@ -6,7 +6,6 @@ import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.enums.Gender;
 import my.company.libraryboot.repository.AuthorRepository;
 import my.company.libraryboot.service.AuthorService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -27,37 +26,42 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 public class AuthorController {
 
         public static final String REST_URL = "/api/authors";
-        // TODO: why 'field injection' is not recommended?
-        @Autowired
         AuthorRepository authorRepository;
-        @Autowired
         AuthorService authorService;
 
+        public AuthorController(AuthorRepository authorRepository, AuthorService authorService) {
+                this.authorRepository = authorRepository;
+                this.authorService = authorService;
+        }
+
         @GetMapping()
-        public ResponseEntity<Page<Author>> getAll(@NotNull final Pageable pageable) {
-                Page<Author> result = authorRepository.findAll(pageable);
-                return ResponseEntity.ok(result);
+        public Page<Author> getAll(@NotNull final Pageable pageable) {
+                log.info("getting all authors");
+                return authorRepository.findAll(pageable);
         }
 
         // http://localhost:8080/api/auhtors/sorted?pageNo=0&pageSize=10&sortBy=coutry
-        // TODO: add ascending or descending order
         @GetMapping(path = "/sorted")
         public Page<Author> getAllSortedByParam(
                 @RequestParam(defaultValue = "0") Integer pageNo,
                 @RequestParam(defaultValue = "20") Integer pageSize,
                 @RequestParam(defaultValue = "title") String sortBy)
         {
+                log.info("getting authors sorted by {}", sortBy);
                 return authorService.getAllSorted(pageNo, pageSize, sortBy);
         }
 
         @GetMapping(path = "/by-name/{name}")
         public Page<Author> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
+                log.info("getting books of author {}", name);
                 return authorService.getBooksByAuthorName(name, pageable);
         }
 
         @GetMapping(path = "/{id}")
-        public Page<Author> getById(@PathVariable int id, @NotNull final Pageable pageable) {
+        public Page<Author> getAuthor(@PathVariable int id, @NotNull final Pageable pageable) {
+                log.info("getting author {}", id);
                 Page<Author> result = authorRepository.findAuthorById(id, pageable);
+
                 if (!result.isEmpty())
                    return result;
                 else
@@ -66,11 +70,13 @@ public class AuthorController {
 
         @GetMapping(path = "/by-country/{country}")
         public Page<Author> getByCountry(@PathVariable String country, @NotNull final Pageable pageable) {
+                log.info("getting books by country {}", country);
                 return authorRepository.findAuthorsByCountry(country.toUpperCase(), pageable);
         }
 
         @GetMapping(path = "/by-gender/{gender}")
         public Page<Author> getByGender(@PathVariable Gender gender, @NotNull final Pageable pageable) {
+                log.info("getting authors by gender {}", gender);
                 return authorRepository.findAuthorsByGender(gender, pageable);
         }
 
@@ -84,18 +90,21 @@ public class AuthorController {
                 URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                         .path(REST_URL + "/{id}")
                         .buildAndExpand(created.getId()).toUri();
+                log.info("author added {}", created);
                 return ResponseEntity.created(uriOfNewResource).body(created);
         }
 
         @DeleteMapping(path = "/{id}")
         @ResponseStatus(HttpStatus.NO_CONTENT)
         public void deleteAuthor(@PathVariable int id) {
+                log.info("deleting author {}", id);
                 authorRepository.deleteAuthorById(id);
         }
 
         @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
         @ResponseStatus(HttpStatus.NO_CONTENT)
         public void updateAuthor(@RequestBody Author author) {
+                log.info("updating author {}", author);
                 authorRepository.save(author);
         }
 }

@@ -19,29 +19,24 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.imageio.ImageIO;
-import javax.imageio.stream.FileImageInputStream;
 import javax.validation.constraints.NotNull;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 
 import static my.company.libraryboot.util.ValidationUtil.checkNew;
 
 @RestController
-@RequestMapping(value = BookRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = BookController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 //@AllArgsConstructor
 @Slf4j
-public class BookRestController {
+public class BookController {
 
     public static final String REST_URL = "/api/books";
     BookRepository bookRepository;
     BookService bookService;
     ImageBlobRepository imageRepository;
 
-    public BookRestController(BookRepository bookRepository, BookService bookService,  ImageBlobRepository imageRepository) {
+    public BookController(BookRepository bookRepository, BookService bookService, ImageBlobRepository imageRepository) {
         this.bookRepository = bookRepository;
         this.bookService = bookService;
         this.imageRepository = imageRepository;
@@ -50,6 +45,7 @@ public class BookRestController {
 //    @Transactional
     @GetMapping()
     public Page<Book> getAll(@NotNull final Pageable pageable) {
+        log.info("getting all books");
         return bookRepository.findAll(pageable);
     }
 
@@ -61,62 +57,63 @@ public class BookRestController {
             @RequestParam(defaultValue = "title") String sortBy,
             @RequestParam(defaultValue = "desc") String direction)
     {
+        log.info("getting books sorted by {}", sortBy);
         return bookService.getAllSorted(pageNo, pageSize, sortBy, direction);
     }
 
-//    @GetMapping(path = "/filter-by-author/{authorName}")
-//    public Page<Book> getFilteredByAuthor(@PathVariable String authorName, @NotNull final Pageable pageable) {
-//        return bookService.getAllFilteredByAuthor(pageable, authorName);
-//    }
-
     @GetMapping(path = "/{id}")
     public Page<Book> getBook(@PathVariable int id, @NotNull final Pageable pageable) {
-        Page<Book> result = bookRepository.findBookById(id, pageable);
-        if (!result.isEmpty())
-            return result;
-        else
-            throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", id));
+       log.info("getting book {}", id);
+       return bookService.getBookById(id, pageable);
     }
 
     @GetMapping(path = "/title/{title}")
     public Page<Book> getBookByTitle(@PathVariable String title, @NotNull final Pageable pageable) {
+        log.info("getting books with title {}", title);
         return bookRepository.findBookByTitle(title, pageable);
     }
 
     @GetMapping(path = "/genre/{genre}")
     public Page<Book> getBooksByGenre(@PathVariable Genre genre, @NotNull final Pageable pageable) {
+        log.info("getting books by genre {}", genre);
         return bookRepository.findBooksByGenresContaining(genre, pageable);
     }
 
     @GetMapping(path = "/author/{name}")
     public Page<Book> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
+        log.info("getting books by author {}", name);
         return bookService.getBooksByAuthorName(name, pageable);
     }
 
     // http://localhost:8080/api/books/type/AUDIO
     @GetMapping(path = "/type/{type}")
     public Page<Book> getByBookType(@PathVariable BookType type, @NotNull final Pageable pageable) {
+        log.info("getting books by type {}", type);
         return bookRepository.findBooksByBookType(type, pageable);
     }
 
     @GetMapping(path = "/by-owned")
     public Page<Book> getByOwned(@RequestParam boolean owned, @NotNull final Pageable pageable) {
+        log.info("getting owned books");
         return bookRepository.findBooksByOwned(owned, pageable);
     }
 
     // http://localhost:8080/api/books/by-finished?finished=false
     @GetMapping(path = "/by-finished")
     public Page<Book> getByFinished(@RequestParam boolean finished, @NotNull final Pageable pageable) {
+        log.info("getting finished books");
         return bookRepository.findBooksByFinished(finished, pageable);
     }
 
     @GetMapping(path = "/loved")
     public Page<Book> getLoved(@NotNull final Pageable pageable) {
+        log.info("getting loved books");
         return bookRepository.findBooksByLovedTrue(pageable);
     }
 
     @PostMapping(path = "/upload-image/{bookId}")
     public void uploadCoverImage(@RequestParam("file") MultipartFile cover, @PathVariable int bookId) throws BookCoverImageUploadingException {
+        log.info("uploading cover image to book {}", bookId);
         Book book = bookRepository.findBookById(bookId, Pageable.unpaged()).getContent().get(0);
 
         if (book != null) {
@@ -132,32 +129,33 @@ public class BookRestController {
         } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
     }
 
-    @GetMapping(path = "/upload-image-test/{bookId}")
-    public void uploadCoverImageTest(@PathVariable int bookId) throws BookCoverImageUploadingException {
-        Book book = bookRepository.findBookById(bookId, Pageable.unpaged()).getContent().get(0);
-
-        if (book != null) {
-            try {
-                BufferedImage bufferedImage =  ImageIO.read(new FileImageInputStream(new File("C:\\Users\\NOIR-SAN\\Desktop\\ShP\\Ec_djEpXsAUvpce.jpg")));
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                ImageIO.write(bufferedImage, "jpg", output);
-                byte [] cover = output.toByteArray();
-
-                ImageBlob bookCover = new ImageBlob(book, cover);
-                imageRepository.save(bookCover);
-
-                book.setCoverImage(bookCover);
-                bookRepository.save(book);
-
-            } catch (IOException e) {
-                throw new BookCoverImageUploadingException(
-                        String.format("Error uploading cover image for Book with id %d", bookId));
-            }
-        } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
-    }
+//    @GetMapping(path = "/upload-image-test/{bookId}")
+//    public void uploadCoverImageTest(@PathVariable int bookId) throws BookCoverImageUploadingException {
+//        Book book = bookRepository.findBookById(bookId, Pageable.unpaged()).getContent().get(0);
+//
+//        if (book != null) {
+//            try {
+//                BufferedImage bufferedImage =  ImageIO.read(new FileImageInputStream(new File("C:\\Users\\NOIR-SAN\\Desktop\\ShP\\Ec_djEpXsAUvpce.jpg")));
+//                ByteArrayOutputStream output = new ByteArrayOutputStream();
+//                ImageIO.write(bufferedImage, "jpg", output);
+//                byte [] cover = output.toByteArray();
+//
+//                ImageBlob bookCover = new ImageBlob(book, cover);
+//                imageRepository.save(bookCover);
+//
+//                book.setCoverImage(bookCover);
+//                bookRepository.save(book);
+//
+//            } catch (IOException e) {
+//                throw new BookCoverImageUploadingException(
+//                        String.format("Error uploading cover image for Book with id %d", bookId));
+//            }
+//        } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
+//    }
 
     @GetMapping(path = "/get-book-cover/{bookId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getBookCoverImage(@PathVariable int bookId) {
+        log.info("getting cover image of book {}", bookId);
         ImageBlob cover = imageRepository.findImageBlobByBook_Id(bookId);
 
         if (cover != null)
@@ -175,18 +173,21 @@ public class BookRestController {
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")
                 .buildAndExpand(created.getId()).toUri();
+        log.info("book added {}", created);
         return ResponseEntity.created(uriOfNewResource).body(created);
     }
 
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBook(@PathVariable int id) {
+        log.info("deleting book {}", id);
         bookRepository.deleteBookById(id);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateBook(@RequestBody Book book) {
+        log.info("updating book {}", book);
         bookRepository.save(book);
     }
 
@@ -194,6 +195,7 @@ public class BookRestController {
     @PutMapping(path = "/finish/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void toggleBookFinished(@PathVariable int id) {
+       log.info("toggling book finished {}", id);
        bookService.toggleBookFinished(id);
     }
 
@@ -201,6 +203,7 @@ public class BookRestController {
     @PutMapping(path = "/owned/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void toggleBookOwned(@PathVariable int id) {
+        log.info("toggling book owned {}", id);
         bookService.toggleBookOwned(id);
     }
 

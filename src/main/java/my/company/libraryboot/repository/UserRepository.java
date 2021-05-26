@@ -24,4 +24,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("DELETE FROM User u WHERE u.id = :id")
     int deleteUserById(int id);
+
+  //  @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT u FROM User u WHERE u.id = :id")
+    Page<User> findUserById(int id, Pageable page);
 }

@@ -28,21 +28,38 @@ public class UserController {
     }
 
     @GetMapping()
-    public ResponseEntity<Page<User>> getAll(@NotNull final Pageable pageable) {
-        Page<User> result = userService.getAll(pageable);
-        return ResponseEntity.ok(result);
+    public Page<User> getAll(@NotNull final Pageable pageable) {
+        log.info("getting all users");
+        return userService.getAll(pageable);
+    }
+
+    @GetMapping(path = "/{id}")
+    public Page<User> getUser(@PathVariable int id, @NotNull final Pageable pageable) {
+        log.info("getting user {}", id);
+        return userService.getUserById(id, pageable);
     }
 
     @Secured("ROLE_ADMIN")
     @PutMapping(path = "/add-role/{newRole}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> addRole(@RequestBody User user, @PathVariable Role newRole) {
+        log.info("adding role {} to user {}", newRole, user);
         User result = userService.addRole(user, newRole);
         return ResponseEntity.ok(result);
     }
 
+//    @Secured("ROLE_ADMIN")
+//    @GetMapping(path = "/add-role/{id}/{newRole}")
+//    public ResponseEntity<User> addRoleTest(@PathVariable int id, @PathVariable Role newRole) {
+//        User user = userService.getUserById(id, Pageable.unpaged()).getContent().get(0);
+//        log.info("adding role {} to user {}", newRole, id);
+//        User result = userService.addRole(user, newRole);
+//        return ResponseEntity.ok(result);
+//    }
+
     @Secured("ROLE_ADMIN")
     @PutMapping(path = "/remove-role/{roleToRemove}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> removeRole(@RequestBody User user, @PathVariable Role roleToRemove) {
+        log.info("removing role {} from user {}", roleToRemove, user);
         User result = userService.removeRole(user, roleToRemove);
         return ResponseEntity.ok(result);
     }
@@ -50,13 +67,15 @@ public class UserController {
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable int id) {
+        log.info("deleting user {}", id);
         userService.deleteUser(id);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBook(@RequestBody User user) {
-        userService.updateBook(user);
+    public void updateUser(@RequestBody User user) {
+        log.info("updating user {}", user);
+        userService.updateUser(user);
     }
 
 }

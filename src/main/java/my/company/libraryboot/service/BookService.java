@@ -49,21 +49,26 @@ public class BookService {
     }
 
     public void toggleBookFinished(int id) {
-        Book book = getBookById(id);
+        Book book = getBookByIdUnpaged(id);
         book.setFinished(!book.isFinished());
         bookRepository.save(book);
     }
 
     public void toggleBookOwned(int id) {
-        Book book = getBookById(id);
+        Book book = getBookByIdUnpaged(id);
         book.setOwned(!book.isOwned());
         bookRepository.save(book);
     }
 
-    private Book getBookById(int id) throws EntityNotFoundException {
-        Page<Book> result = bookRepository.findBookById(id, Pageable.unpaged());
+    public Page<Book> getBookById(int id, Pageable pageable) throws EntityNotFoundException {
+        Page<Book> result = bookRepository.findBookById(id, pageable);
+
         if (!result.isEmpty())
-            return result.getContent().get(0);
+            return result;
         else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", id));
+    }
+
+    private Book getBookByIdUnpaged(int id) {
+        return getBookById(id, Pageable.unpaged()).getContent().get(0);
     }
 }

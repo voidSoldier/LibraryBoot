@@ -1,5 +1,6 @@
 package my.company.libraryboot.service;
 
+import my.company.libraryboot.error.EntityNotFoundException;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.repository.UserRepository;
@@ -19,8 +20,16 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public Page<User> getAll( Pageable pageable) {
+    public Page<User> getAll(Pageable pageable) {
         return userRepository.findAll(pageable);
+    }
+
+    public Page<User> getUserById(int id, Pageable pageable) throws EntityNotFoundException {
+        Page<User> result = userRepository.findUserById(id, pageable);
+
+        if (!result.isEmpty())
+            return result;
+        else throw new EntityNotFoundException(String.format("User with id %d doesn't exist!", id));
     }
 
     public User addRole(User user, Role newRole) {
@@ -46,7 +55,7 @@ public class UserService {
         userRepository.deleteUserById(id);
     }
 
-    public void updateBook(User user) {
+    public void updateUser(User user) {
         userRepository.save(user);
     }
 }
