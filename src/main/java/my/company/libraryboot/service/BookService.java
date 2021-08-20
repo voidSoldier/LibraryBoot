@@ -49,13 +49,13 @@ public class BookService {
     }
 
     public void toggleBookFinished(int id) {
-        Book book = getBookByIdUnpaged(id);
+        Book book = getBookById(id);
         book.setFinished(!book.isFinished());
         bookRepository.save(book);
     }
 
     public void toggleBookOwned(int id) {
-        Book book = getBookByIdUnpaged(id);
+        Book book = getBookById(id);
         book.setOwned(!book.isOwned());
         bookRepository.save(book);
     }
@@ -68,7 +68,7 @@ public class BookService {
         else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", id));
     }
 
-    private Book getBookByIdUnpaged(int id) {
+    public Book getBookById(int id) {
         return getBookById(id, Pageable.unpaged()).getContent().get(0);
     }
 }

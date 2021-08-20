@@ -47,8 +47,7 @@ public class UserAccountController {
 
         prepareAndSave(userForm);
         log.info("registering user {}", userForm);
-//        securityService.autoLogin(userForm.getUsername(), userForm.getPasswordConfirm());
-        securityService.autoLogin(userForm.getEmail(), userForm.getPassword());
+        securityService.autoLogin(userForm.getEmail(), userForm.getPassword()); // email as username
 
         return "redirect:/welcome";
     }
