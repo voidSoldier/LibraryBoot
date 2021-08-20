@@ -1,7 +1,7 @@
 package my.company.libraryboot.controllers;
 
 import lombok.extern.slf4j.Slf4j;
-import my.company.libraryboot.exception.AppException.*;
+import my.company.libraryboot.exception.AppException.EntityNotFoundException;
 import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.enums.Gender;
 import my.company.libraryboot.repository.AuthorRepository;

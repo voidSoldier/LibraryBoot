@@ -93,14 +93,14 @@ public class BookController {
         return bookRepository.findBooksByBookType(type, pageable);
     }
 
-    @GetMapping(path = "/by-owned")
+    @GetMapping(path = "/owned")
     public Page<Book> getByOwned(@RequestParam boolean owned, @NotNull final Pageable pageable) {
         log.info("getting owned books");
         return bookRepository.findBooksByOwned(owned, pageable);
     }
 
-    // http://localhost:8080/api/books/by-finished?finished=false
-    @GetMapping(path = "/by-finished")
+    // http://localhost:8080/api/books/finished?finished=false
+    @GetMapping(path = "/finished")
     public Page<Book> getByFinished(@RequestParam boolean finished, @NotNull final Pageable pageable) {
         log.info("getting finished books");
         return bookRepository.findBooksByFinished(finished, pageable);
@@ -129,30 +129,6 @@ public class BookController {
             }
         } else throw new AppException.EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
     }
-
-//    @GetMapping(path = "/upload-image-test/{bookId}")
-//    public void uploadCoverImageTest(@PathVariable int bookId) throws BookCoverImageUploadingException {
-//        Book book = bookRepository.findBookById(bookId, Pageable.unpaged()).getContent().get(0);
-//
-//        if (book != null) {
-//            try {
-//                BufferedImage bufferedImage =  ImageIO.read(new FileImageInputStream(new File("C:\\Users\\NOIR-SAN\\Desktop\\ShP\\Ec_djEpXsAUvpce.jpg")));
-//                ByteArrayOutputStream output = new ByteArrayOutputStream();
-//                ImageIO.write(bufferedImage, "jpg", output);
-//                byte [] cover = output.toByteArray();
-//
-//                ImageBlob bookCover = new ImageBlob(book, cover);
-//                imageRepository.save(bookCover);
-//
-//                book.setCoverImage(bookCover);
-//                bookRepository.save(book);
-//
-//            } catch (IOException e) {
-//                throw new BookCoverImageUploadingException(
-//                        String.format("Error uploading cover image for Book with id %d", bookId));
-//            }
-//        } else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist!", bookId));
-//    }
 
     @GetMapping(path = "/get-book-cover/{bookId}", produces = MediaType.IMAGE_JPEG_VALUE)
     public @ResponseBody byte[] getBookCoverImage(@PathVariable int bookId) {
@@ -192,16 +168,14 @@ public class BookController {
         bookRepository.save(book);
     }
 
-    // TODO: get ? post ? put ? patch ?
-    @PutMapping(path = "/finish/{id}")
+    @PatchMapping(path = "/finish/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void toggleBookFinished(@PathVariable int id) {
        log.info("toggling book finished {}", id);
        bookService.toggleBookFinished(id);
     }
 
-    // TODO: get ? post ? put ? patch ?
-    @PutMapping(path = "/owned/{id}")
+    @PatchMapping(path = "/owned/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void toggleBookOwned(@PathVariable int id) {
         log.info("toggling book owned {}", id);

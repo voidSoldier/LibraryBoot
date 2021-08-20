@@ -27,6 +27,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Secured("ROLE_ADMIN") //TODO: what's this for? does it work?
     @GetMapping()
     public Page<User> getAll(@NotNull final Pageable pageable) {
         log.info("getting all users");
@@ -46,15 +47,6 @@ public class UserController {
         User result = userService.addRole(user, newRole);
         return ResponseEntity.ok(result);
     }
-
-//    @Secured("ROLE_ADMIN")
-//    @GetMapping(path = "/add-role/{id}/{newRole}")
-//    public ResponseEntity<User> addRoleTest(@PathVariable int id, @PathVariable String newRole) {
-//        User user = userService.getUserById(id, Pageable.unpaged()).getContent().get(0);
-//        log.info("adding role {} to user {}", newRole, id);
-//        User result = userService.addRole(user, newRole);
-//        return ResponseEntity.ok(result);
-//    }
 
     @Secured("ROLE_ADMIN")
     @PutMapping(path = "/remove-role/{roleToRemove}", consumes = MediaType.APPLICATION_JSON_VALUE)
