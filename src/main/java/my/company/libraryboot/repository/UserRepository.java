@@ -13,16 +13,13 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public interface UserRepository extends JpaRepository<User, Integer> {
 
-//    @RestResource(rel = "by-email", path = "by-email")
     @Query("SELECT u FROM User u WHERE u.email = LOWER(:email)")
     Optional<User> findByEmailIgnoreCase(String email);
 
-    @Transactional
     @Modifying
     @Query("DELETE FROM User u WHERE u.id = :id")
     int deleteUserById(int id);
 
-  //  @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT u FROM User u WHERE u.id = :id")
     Page<User> findUserById(int id, Pageable page);
 }

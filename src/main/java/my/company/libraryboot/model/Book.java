@@ -16,9 +16,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "title")
 public class Book extends BaseEntity {
 
     @Column(name = "title", nullable = false)
@@ -48,7 +45,6 @@ public class Book extends BaseEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Genre> genres;
 
-//    @JsonManagedReference
     @JsonIgnoreProperties("books") // to avoid Jackson JSON infinite recursion
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinTable(

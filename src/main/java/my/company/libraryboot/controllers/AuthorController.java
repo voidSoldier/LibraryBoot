@@ -39,7 +39,6 @@ public class AuthorController {
                 return authorRepository.getAll(pageable);
         }
 
-        // http://localhost:8080/api/auhtors/sorted?pageNo=0&pageSize=10&sortBy=coutry
         @GetMapping(path = "/sorted")
         public Page<Author> getAllSortedByParam(
                 @RequestParam(defaultValue = "0") Integer pageNo,

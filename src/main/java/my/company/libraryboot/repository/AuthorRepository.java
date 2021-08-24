@@ -17,7 +17,6 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query("SELECT a FROM Author a")
     Page<Author> getAll(Pageable pageable);
 
-//    @RestResource(rel = "by-country", path = "by-country")
     @EntityGraph(attributePaths = {"books"}, type = EntityGraph.EntityGraphType.LOAD)
     Page<Author> findAuthorsByCountry(String country, Pageable page);
 
@@ -32,6 +31,4 @@ public interface AuthorRepository extends JpaRepository<Author, Integer> {
     @Query("DELETE FROM Author a WHERE a.id = :id")
     int deleteAuthorById(int id);
 
-    // http://localhost:8080/api/authors/search/by-name?name=
-    // http://localhost:8080/api/authors/search/by-country?country=
 }

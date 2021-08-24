@@ -48,7 +48,6 @@ public class BookController {
         return bookRepository.getAll(pageable);
     }
 
-    // http://localhost:8080/api/books/sorted?pageNo=0&pageSize=10&sortBy=finished
     @GetMapping(path = "/sorted")
     public Page<Book> getAllSortedByParam(
             @RequestParam(defaultValue = "0") Integer pageNo,
@@ -84,7 +83,6 @@ public class BookController {
         return bookService.getBooksByAuthorName(name, pageable);
     }
 
-    // http://localhost:8080/api/books/type/AUDIO
     @GetMapping(path = "/type/{type}")
     public Page<Book> getByBookType(@PathVariable BookType type, @NotNull final Pageable pageable) {
         log.info("getting books by type {}", type);
@@ -97,7 +95,6 @@ public class BookController {
         return bookRepository.findBooksByOwned(owned, pageable);
     }
 
-    // http://localhost:8080/api/books/finished?finished=false
     @GetMapping(path = "/finished")
     public Page<Book> getByFinished(@RequestParam boolean finished, @NotNull final Pageable pageable) {
         log.info("getting finished books");
