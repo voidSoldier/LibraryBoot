@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @AutoConfigureMockMvc
 //@ActiveProfiles("test")
 //https://docs.spring.io/spring-boot/docs/current/reference/html/spring-boot-features.html#boot-features-testing-spring-boot-applications-testing-with-mock-environment
-@WithUserDetails(userDetailsServiceBeanName = "userDetailsService", value = "admin@javaops.ru")
+@WithUserDetails(userDetailsServiceBeanName = "userDetailsService", value = "admin@gmail.ru")
 public abstract class AbstractControllerTest {
 
     @Autowired

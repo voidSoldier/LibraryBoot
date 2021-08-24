@@ -18,7 +18,6 @@ import java.util.HashSet;
 import static my.company.libraryboot.config.WebSecurityConfig.PASSWORD_ENCODER;
 
 @Controller
-//@AllArgsConstructor
 @Slf4j
 public class UserAccountController {
 
@@ -68,11 +67,18 @@ public class UserAccountController {
         return "welcome";
     }
 
-    private void prepareAndSave(User user) {
-        String password = user.getPassword();
-        user.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
-        user.setEmail(user.getEmail().toLowerCase());
-        user.setRoles(new HashSet<>(Collections.singleton(Role.USER))); // Collections.singleton returns immutable Set, but new HashSet<>(Collections.singleton) is mutable
-        userRepository.save(user);
+    private void prepareAndSave(User userForm) {
+        User newUser = new User();
+
+        newUser.setFirstName(userForm.getFirstName());
+        newUser.setLastName(userForm.getLastName());
+
+        String password = userForm.getPassword();
+        newUser.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
+
+        newUser.setEmail(userForm.getEmail().toLowerCase());
+        newUser.setRoles(new HashSet<>(Collections.singleton(Role.USER))); // Collections.singleton returns immutable Set, but new HashSet<>(Collections.singleton) is mutable
+
+        userRepository.save(newUser);
     }
 }

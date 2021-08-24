@@ -1,6 +1,6 @@
 package my.company.libraryboot.service;
 
-import my.company.libraryboot.exception.AppException.*;
+import my.company.libraryboot.exception.AppException.EntityNotFoundException;
 import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.Book;
 import my.company.libraryboot.repository.BookRepository;
@@ -8,7 +8,6 @@ import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,17 +24,16 @@ public class BookService {
     public Page<Book> getAllSorted(Integer pageNo, Integer pageSize, String sortBy, String direction) {
         Sort.Direction dir = SORT_ASC.equals(direction) ? Sort.Direction.ASC : Sort.Direction.DESC;
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(dir, sortBy));
-        return bookRepository.findAll(pageable);
+        return bookRepository.getAll(pageable);
     }
 
     public Page<Book> getAllFilteredByAuthor(Pageable pageable, String authorName) {
-        List<Book> filtered = bookRepository.findAll().stream().filter(b -> {
-            Set<Author> authors = b.getAuthors();
-            for (Author a : authors)
-                if ((a.getFirstName() + " " + a.getLastName()).toLowerCase().contains(authorName.toLowerCase()))
-                    return true;
-            return false;
-        }).collect(Collectors.toList());
+        List<Book> filtered = bookRepository.getAll()
+                .stream()
+                .filter(b -> b.getAuthors()
+                        .stream()
+                        .anyMatch(a -> isRequiredAuthor(a, authorName)))
+                .collect(Collectors.toList());
 
         Page<Book> result = new PageImpl<>(filtered, pageable, filtered.size());
         return result;
@@ -70,5 +68,10 @@ public class BookService {
 
     public Book getBookById(int id) {
         return getBookById(id, Pageable.unpaged()).getContent().get(0);
+    }
+
+    public static boolean isRequiredAuthor(Author author, String name) {
+        return (author.getFirstName() + " " + author.getLastName()).toLowerCase()
+                .contains(name.toLowerCase());
     }
 }

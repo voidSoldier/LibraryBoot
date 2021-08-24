@@ -28,7 +28,6 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = BookController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-//@AllArgsConstructor
 @Slf4j
 public class BookController {
 
@@ -43,11 +42,10 @@ public class BookController {
         this.imageRepository = imageRepository;
     }
 
-//    @Transactional
     @GetMapping()
     public Page<Book> getAll(@NotNull final Pageable pageable) {
         log.info("getting all books");
-        return bookRepository.findAll(pageable);
+        return bookRepository.getAll(pageable);
     }
 
     // http://localhost:8080/api/books/sorted?pageNo=0&pageSize=10&sortBy=finished
@@ -140,9 +138,6 @@ public class BookController {
         else throw new EntityNotFoundException(String.format("Book with id %d doesn't exist OR it has no cover image!", bookId));
     }
 
-    /**
-     *  ============================NON-IDEMPOTENT=====================================
-     */
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Book> addNewBook(@RequestBody Book newBook) {
         checkNew(newBook);
@@ -181,5 +176,4 @@ public class BookController {
         log.info("toggling book owned {}", id);
         bookService.toggleBookOwned(id);
     }
-
 }

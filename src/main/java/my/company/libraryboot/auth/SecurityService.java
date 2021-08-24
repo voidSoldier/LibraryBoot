@@ -17,23 +17,14 @@ public class SecurityService {
         this.userDetailsService = userDetailsService;
     }
 
-//    public String findLoggedInUsername() {
-//        Object userDetails = SecurityContextHolder.getContext().getAuthentication().getDetails();
-//
-//        if (userDetails instanceof UserDetails)
-//            return ((UserDetails) userDetails).getUsername();
-//
-//        return null;
-//    }
-
     public void autoLogin(String username, String password) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+        UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userDetails, password, userDetails.getAuthorities());
 
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        authenticationManager.authenticate(authToken);
 
-        if (usernamePasswordAuthenticationToken.isAuthenticated())
-            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        if (authToken.isAuthenticated())
+            SecurityContextHolder.getContext().setAuthentication(authToken);
     }
 }

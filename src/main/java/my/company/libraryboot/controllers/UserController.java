@@ -16,7 +16,6 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping(value = UserController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-//@AllArgsConstructor
 @Slf4j
 public class UserController {
 
@@ -27,7 +26,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Secured("ROLE_ADMIN") //TODO: what's this for? does it work?
+    @Secured("ROLE_ADMIN")
     @GetMapping()
     public Page<User> getAll(@NotNull final Pageable pageable) {
         log.info("getting all users");
@@ -69,5 +68,4 @@ public class UserController {
         log.info("updating user {}", user);
         userService.updateUser(user);
     }
-
 }

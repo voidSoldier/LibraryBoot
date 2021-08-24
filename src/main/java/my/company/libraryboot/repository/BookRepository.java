@@ -12,6 +12,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
@@ -25,40 +27,42 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
      *      http://localhost:8080/api/books/search/by-genre?genre=FANTASY
      *      http://localhost:8080/api/books/search/by-author?author=Abercrombie
      */
-//
+
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT b FROM Book b")
+    Page<Book> getAll(Pageable pageable);
+
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT b FROM Book b")
+    List<Book> getAll();
+
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
+    @Query("SELECT b FROM Book b WHERE LOWER(b.title) LIKE LOWER(CONCAT(:title, '%'))")
     Page<Book> findBookByTitle(String title, Pageable page);
 
-//    @Transactional
-//    @EntityGraph(attributePaths = {"coverImage"}, type = EntityGraph.EntityGraphType.LOAD)
-//    @Query("SELECT b FROM Book b LEFT JOIN b.coverImage ci WHERE b.id = :id")
-//    Page<Book> findBookWithCover(int id, Pageable page);
-
-//    @Query("SELECT b FROM Book b LEFT JOIN b.coverImage ci WHERE b.id =:id")
-//    Book findBookWithCover(int id);
-
-    // TODO: is EntityGraph necessary since it's used to fix N+1 problem which should not appear due to Session Open-in-View is set to false?
-    @EntityGraph(attributePaths = {"authors"}, type = EntityGraph.EntityGraphType.LOAD)
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(a.firstName) LIKE LOWER(CONCAT(:name, '%')) OR LOWER(a.lastName) LIKE LOWER(CONCAT(:name, '%'))")
     Page<Book> getBooksByAuthorName(@Param("name") String name, Pageable page);
-    // TODO: is EntityGraph necessary?
-    @EntityGraph(attributePaths = {"authors"}, type = EntityGraph.EntityGraphType.LOAD)
+
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b LEFT JOIN b.authors a WHERE LOWER(CONCAT(a.firstName, ' ', a.lastName)) LIKE LOWER(CONCAT(:name, '%'))")
     Page<Book> getBooksByAuthorFullName(@Param("name") String name, Pageable page);
 
-
-//    @EntityGraph(attributePaths = {"genres"}, type = EntityGraph.EntityGraphType.LOAD)
-//    @Query("SELECT b FROM Book b JOIN FETCH b.genres g WHERE g")
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     Page<Book> findBooksByGenresContaining(Genre genre, Pageable page);
 
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     Page<Book> findBooksByBookType(BookType bookType, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     Page<Book> findBooksByOwned(boolean owned, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     Page<Book> findBooksByFinished(boolean finished, Pageable pageable);
 
+    @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     Page<Book> findBooksByLovedTrue(Pageable pageable);
 
-    // TODO: is 'genres' necessary?
     @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b WHERE b.id = :id")
     Page<Book> findBookById(int id, Pageable page);

@@ -17,7 +17,6 @@ import java.sql.SQLException;
 @Configuration
 @Slf4j
 public class AppConfig implements WebMvcConfigurer {
-//public class AppConfig {
 
     private ApplicationContext applicationContext;
 

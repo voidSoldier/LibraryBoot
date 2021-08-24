@@ -19,13 +19,6 @@ public class AuthorService {
 
     public Page<Author> getAllSorted(Integer pageNo, Integer pageSize, String sortBy) {
         Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        return authorRepository.findAll(pageable);
-    }
-
-    public Page<Author> getBooksByAuthorName(String authorName, Pageable pageable) {
-        if (authorName.split(" ").length > 1)
-            return authorRepository.getBooksByAuthorFullName(authorName, pageable);
-        else
-            return authorRepository.getBooksByAuthorName(authorName, pageable);
+        return authorRepository.getAll(pageable);
     }
 }
