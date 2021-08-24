@@ -21,7 +21,6 @@ import static my.company.libraryboot.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(value = AuthorController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
-//@AllArgsConstructor
 @Slf4j
 public class AuthorController {
 
@@ -37,7 +36,7 @@ public class AuthorController {
         @GetMapping()
         public Page<Author> getAll(@NotNull final Pageable pageable) {
                 log.info("getting all authors");
-                return authorRepository.findAll(pageable);
+                return authorRepository.getAll(pageable);
         }
 
         // http://localhost:8080/api/auhtors/sorted?pageNo=0&pageSize=10&sortBy=coutry
@@ -49,12 +48,6 @@ public class AuthorController {
         {
                 log.info("getting authors sorted by {}", sortBy);
                 return authorService.getAllSorted(pageNo, pageSize, sortBy);
-        }
-
-        @GetMapping(path = "/by-name/{name}")
-        public Page<Author> getBooksByAuthor(@PathVariable String name, @NotNull final Pageable pageable) {
-                log.info("getting books of author {}", name);
-                return authorService.getBooksByAuthorName(name, pageable);
         }
 
         @GetMapping(path = "/{id}")
@@ -80,9 +73,6 @@ public class AuthorController {
                 return authorRepository.findAuthorsByGender(gender, pageable);
         }
 
-        /**
-         *  ============================NON-IDEMPOTENT=====================================
-         */
         @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<Author> addNewAuthor(@RequestBody Author newAuthor) {
                 checkNew(newAuthor);

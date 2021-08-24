@@ -1,10 +1,10 @@
-drop table if exists USERS;
 drop table if exists USER_ROLE;
+drop table if exists USERS;
 drop table if exists GENRES;
 drop table if exists BOOK_AUTHORS;
+drop table if exists BOOK_COVERS;
 drop table if exists BOOKS;
 drop table if exists AUTHORS;
-drop table if exists BOOK_COVERS;
 drop table if exists COVERS;
 
 

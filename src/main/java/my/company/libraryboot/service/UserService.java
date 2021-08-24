@@ -1,15 +1,13 @@
 package my.company.libraryboot.service;
 
-import my.company.libraryboot.exception.AppException.*;
+import my.company.libraryboot.exception.AppException.EntityNotFoundException;
+import my.company.libraryboot.exception.AppException.RoleNotFoundException;
 import my.company.libraryboot.model.User;
 import my.company.libraryboot.model.enums.Role;
 import my.company.libraryboot.repository.UserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -33,20 +31,14 @@ public class UserService {
     }
 
     public User addRole(User user, String roleName) {
-        Role newRole = checkRole(roleName);
-        Set<Role> roles = user.getRoles();
-        roles.add(newRole);
-        user.setRoles(roles);
+        user.getRoles().add(checkRole(roleName));
         userRepository.save(user);
 
         return user;
     }
 
     public User removeRole(User user, Role roleToRemove) {
-        user.setRoles(
-                user.getRoles().stream()
-                        .filter(r -> r != roleToRemove)
-                        .collect(Collectors.toSet()));
+        user.getRoles().removeIf(r -> r.equals(roleToRemove));
         userRepository.save(user);
 
         return user;

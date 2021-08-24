@@ -1,6 +1,5 @@
 package my.company.libraryboot;
 
-import my.company.libraryboot.model.Author;
 import my.company.libraryboot.model.Book;
 import my.company.libraryboot.model.ImageBlob;
 import my.company.libraryboot.repository.BookRepository;
@@ -21,8 +20,8 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.List;
-import java.util.function.Predicate;
 
+import static my.company.libraryboot.service.BookService.isRequiredAuthor;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -116,13 +115,10 @@ public class BookControllerTest extends AbstractControllerTest {
                 .readValues(extractJsonObjArray(mvcResult.getResponse().getContentAsString()))
                 .readAll();
 
-        Predicate<Author> testAuthorName = a ->
-                (a.getFirstName() + a.getLastName()).toLowerCase().contains(TEST_AUTHOR_NAME);
-
         if (!found.isEmpty())
             Assertions.assertTrue(((Book) found.get(0))
                     .getAuthors().stream()
-                    .anyMatch(testAuthorName)
+                    .anyMatch(a -> isRequiredAuthor(a, TEST_AUTHOR_NAME))
             );
     }
 }
