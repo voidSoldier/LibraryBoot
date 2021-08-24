@@ -11,7 +11,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-//@ToString(onlyExplicitlyIncluded = true)
 public class ImageBlob extends BaseEntity {
 
     @JsonIgnoreProperties("coverImage")
@@ -19,7 +18,7 @@ public class ImageBlob extends BaseEntity {
     private Book book;
 
     @Lob
-    @Column(name = "image", columnDefinition = "bytea") /* "columnDefinition" defines the column type */
+    @Column(name = "image", columnDefinition = "bytea") // "columnDefinition" defines the column type
     private byte[] image;
 
     @Override

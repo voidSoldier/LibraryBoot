@@ -17,17 +17,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    /*
-     *  @RestResource is ADMIN access only!
-     *  @RestResource(rel = "by-title", path = "by-title")
-     *  @RestResource(rel = "by-author", path = "by-author")
-     *  @RestResource(rel = "by-genre", path = "by-genre")
-     *
-     *      http://localhost:8080/api/books/search/by-title?title=Moby%20Dick
-     *      http://localhost:8080/api/books/search/by-genre?genre=FANTASY
-     *      http://localhost:8080/api/books/search/by-author?author=Abercrombie
-     */
-
+    // https://tech.asimio.net/2020/11/06/Preventing-N-plus-1-select-problem-using-Spring-Data-JPA-EntityGraph.html
     @EntityGraph(attributePaths = {"authors", "genres"}, type = EntityGraph.EntityGraphType.LOAD)
     @Query("SELECT b FROM Book b")
     Page<Book> getAll(Pageable pageable);

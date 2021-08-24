@@ -21,7 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.List;
 
-import static my.company.libraryboot.service.BookService.isRequiredAuthor;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -115,10 +114,11 @@ public class BookControllerTest extends AbstractControllerTest {
                 .readValues(extractJsonObjArray(mvcResult.getResponse().getContentAsString()))
                 .readAll();
 
-        if (!found.isEmpty())
-            Assertions.assertTrue(((Book) found.get(0))
-                    .getAuthors().stream()
-                    .anyMatch(a -> isRequiredAuthor(a, TEST_AUTHOR_NAME))
-            );
+        Assertions.assertTrue(found.stream()
+                .allMatch(b -> ((Book) b)
+                        .getAuthors().stream()
+                        .anyMatch(a -> (a.getFirstName() + " " + a.getLastName()).toLowerCase()
+                                .contains(TEST_AUTHOR_NAME))
+                ));
     }
 }

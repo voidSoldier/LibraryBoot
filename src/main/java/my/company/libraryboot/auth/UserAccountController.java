@@ -23,12 +23,10 @@ public class UserAccountController {
 
     UserRepository userRepository;
     SecurityService securityService;
-    UserValidator userValidator;
 
-    public UserAccountController(UserRepository userRepository, SecurityService securityService, UserValidator userValidator) {
+    public UserAccountController(UserRepository userRepository, SecurityService securityService) {
         this.userRepository = userRepository;
         this.securityService = securityService;
-        this.userValidator = userValidator;
     }
 
     @GetMapping("/registration")
@@ -39,7 +37,6 @@ public class UserAccountController {
 
     @PostMapping("/registration")
     public String registration(@ModelAttribute("userForm") User userForm, BindingResult bindingResult) {
-        userValidator.validate(userForm, bindingResult);
 
         if (bindingResult.hasErrors())
             return "registration";

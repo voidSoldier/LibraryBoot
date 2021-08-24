@@ -17,9 +17,6 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "id")
 public class Author extends BaseEntity {
 
     @Column(name = "first_name", nullable = false)
@@ -39,8 +36,6 @@ public class Author extends BaseEntity {
     @Column(name = "country_of_origin")
     private String country;
 
-//    @JsonIgnore
-//    @JsonBackReference
     @JsonIgnoreProperties("authors") // to avoid Jackson JSON infinite recursion
     @ManyToMany(mappedBy = "authors", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
