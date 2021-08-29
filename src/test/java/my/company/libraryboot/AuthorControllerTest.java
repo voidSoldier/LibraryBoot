@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 
@@ -51,7 +50,6 @@ public class AuthorControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Transactional
     void addNewAuthor() throws Exception {
         CsrfToken csrfToken = getCsrfToken();
         Author newAuthor = new Author("firstName", "lastName", Gender.F, "Italy", new HashSet<>());
@@ -75,7 +73,6 @@ public class AuthorControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Transactional
     void deleteAuthor() throws Exception {
         CsrfToken csrfToken = getCsrfToken();
 
@@ -89,7 +86,6 @@ public class AuthorControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Transactional
     void updateAuthor() throws Exception {
         CsrfToken csrfToken = getCsrfToken();
         String updatedFirstName = "updatedFirstName";
