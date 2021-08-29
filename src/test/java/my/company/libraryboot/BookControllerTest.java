@@ -12,7 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.imageio.ImageIO;
 import javax.imageio.stream.FileImageInputStream;
@@ -59,7 +58,6 @@ public class BookControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Transactional
     void uploadBookCover() throws Exception {
         CsrfToken csrfToken = getCsrfToken();
 

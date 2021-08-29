@@ -14,7 +14,6 @@ public class ValidationUtil {
     }
 
     //  Conservative when you reply, but accept liberally (http://stackoverflow.com/a/32728226/548473)
-    // TODO: deal with it
     public static void assureIdConsistent(BaseEntity entity, int id) {
         if (entity.isNew()) {
             entity.setId(id);

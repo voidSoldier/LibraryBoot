@@ -1,5 +1,7 @@
 package my.company.libraryboot;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import my.company.libraryboot.model.User;
@@ -10,7 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -38,14 +41,10 @@ public class UserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    @Transactional
     void addNewRole() throws Exception {
         CsrfToken csrfToken = getCsrfToken();
         User user = getUserById("/1");
-
-        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter writer = objectMapper.writer().withDefaultPrettyPrinter();
-        String userAsRequestBody = writer.writeValueAsString(user);
+        String userAsRequestBody = getUserWithPasswordAsString(user);
 
         perform(MockMvcRequestBuilders.put(URL + "/add-role/" + Role.TEST)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -58,7 +57,6 @@ public class UserControllerTest extends AbstractControllerTest {
         Assertions.assertTrue(userWithNewRole.getRoles().contains(Role.TEST));
     }
 
-
     private User getUserById(String id) throws Exception {
         MvcResult mvcResult = perform(MockMvcRequestBuilders.get(URL + id))
                 .andExpect(status().isOk())
@@ -66,5 +64,14 @@ public class UserControllerTest extends AbstractControllerTest {
                 .andReturn();
 
         return objectMapper.readValue(extractJsonObj(mvcResult.getResponse().getContentAsString()), User.class);
+    }
+
+    private String getUserWithPasswordAsString(User user) throws JsonProcessingException {
+        objectMapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        ObjectWriter writer = objectMapper.writer().withDefaultPrettyPrinter();
+        Map<String, Object> userMap = objectMapper.convertValue(user, new TypeReference<Map<String, Object>>() {});
+        userMap.put("password", "new password");
+
+        return writer.writeValueAsString(userMap);
     }
 }

@@ -66,15 +66,13 @@ public class UserAccountController {
 
     private void prepareAndSave(User userForm) {
         User newUser = new User();
-
         newUser.setFirstName(userForm.getFirstName());
         newUser.setLastName(userForm.getLastName());
+        newUser.setEmail(userForm.getEmail().toLowerCase());
+        newUser.setRoles(new HashSet<>(Collections.singleton(Role.USER))); // Collections.singleton returns immutable Set, but new HashSet<>(Collections.singleton) is mutable
 
         String password = userForm.getPassword();
         newUser.setPassword(StringUtils.hasText(password) ? PASSWORD_ENCODER.encode(password) : password);
-
-        newUser.setEmail(userForm.getEmail().toLowerCase());
-        newUser.setRoles(new HashSet<>(Collections.singleton(Role.USER))); // Collections.singleton returns immutable Set, but new HashSet<>(Collections.singleton) is mutable
 
         userRepository.save(newUser);
     }
