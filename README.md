@@ -1,10 +1,18 @@
 # LibraryBoot
-sort authors: http://localhost:8080/api/auhtors/sorted?pageNo=0&pageSize=10&sortBy=coutry
+Web app for managing home library. It's possible to mark books as already read, owned, loved and choose a book's type and genres, load cover image.
+It's also possible to add book authors with some basic info.
 
-sort books: http://localhost:8080/api/books/sorted?pageNo=0&pageSize=10&sortBy=finished
+## Stack:
+- Spring Boot 2
+- Spring Data JPA
+- Spring Security
+- Spring Test
+- Spring Security Taglibs
+- Maven
+- H2
+- Lombok
+- Slf4j
+- Tomcat Embed
 
-books type:
-http://localhost:8080/api/books/type/PAPER
-
-books finished: http://localhost:8080/api/books/finished?finished=false
-
+##
+<i>-= basic cURL's to be added =-</i>
